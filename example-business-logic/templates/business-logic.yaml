@@ -1,0 +1,25 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: business-logic-deployment
+  labels:
+    app: business-logic-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: business-logic-deployment
+  template:
+    metadata:
+      annotations:
+        iam.amazonaws.com/role: example-kiam-cluster-pod-role-somesuffix
+      labels:
+        app: business-logic-deployment
+    spec:
+      containers:
+      - name: example-pod
+        image: bambooengineering/ubuntu-awscli:1.17.8
+        command: [ "/bin/bash", "-c", "--" ]
+        # Sleep forever to allow a user to ssh into the container and test IAM permissions
+        args: [ "while true; do sleep 30; done;" ]
